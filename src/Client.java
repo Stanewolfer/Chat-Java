@@ -1,21 +1,16 @@
 package src;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Clients {
+public class Client {
 
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
-    private String username;
+    private static Socket socket;
+    private static BufferedReader bufferedReader;
+    private static BufferedWriter bufferedWriter;
+    private static String username;
 
-    public Clients(Socket socket, String username) {
+    public Client(Socket socket, String username) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -26,7 +21,7 @@ public class Clients {
         }
     }
 
-    public void sendMessage(){
+    public static void sendMessage(String string){
         try{
 
             bufferedWriter.write(username);
@@ -64,7 +59,7 @@ public class Clients {
         }).start();
     }
 
-    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+    public static void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         try {
             if (bufferedReader != null){
                 bufferedReader.close();
@@ -83,12 +78,12 @@ public class Clients {
     public static void main(String[] args) throws Exception {
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your name for the chat group:");
+        System.out.println("Enter your name for the chat group: ");
         String username = scanner.nextLine();
         Socket socket = new Socket("localhost", 1234);
-        Clients client = new Clients(socket, username);
-        client.ListenForMessage();
-        client.sendMessage();
+        Client client = new Client(socket, username);
+        client.ListenForMessage();;
+        client.sendMessage(username);
 
     }
 }
