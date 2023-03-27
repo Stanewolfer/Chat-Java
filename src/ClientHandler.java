@@ -13,7 +13,6 @@ public class ClientHandler implements Runnable{
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
-    private String pseudo;
 
     public ClientHandler(Socket socket) throws IOException{
         this.socket = socket;
