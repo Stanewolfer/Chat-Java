@@ -19,9 +19,8 @@ public class ClientHandler implements Runnable{
     public ClientHandler(Socket socket){
         try{
             this.socket = socket;
-            this.bufferedWriter new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.bufferedReader new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.clientUsername = bufferedReader.readLine();
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             clientHandlers.add(this);
             broadcastMessage("SERVER : " + clientUsername + "has entered the chat !");
         }catch(IOException e){
@@ -59,20 +58,6 @@ public class ClientHandler implements Runnable{
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
             }
-        }
-    }
-
-    public void broadcastMessage(String messageToSend) {
-        for(ClientHandler clientHandler : clientHandlers);
-        try {
-            if (!clientHandler.clientUsername.equals(clientUsername)){
-                clientHandler.bufferedWriter.write(messageToSend);
-                clientHandler.bufferedWriter.newLine();
-                clientHandler.bufferedWriter.flush();
-            }
-            
-        } catch (IOException e) {
-            closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
