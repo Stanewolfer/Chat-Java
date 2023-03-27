@@ -21,8 +21,8 @@ public class Client {
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.username = username; 
-        }catch (IOException e ){
-            CloseEverything(socket, bufferedReader, bufferedWriter);
+        } catch (IOException e ) {
+            closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
@@ -39,6 +39,57 @@ public class Client {
             bufferedWriter.newLine();
         }   bufferedWriter.flush();
         
+    } catch (IOException e) {
+        closeEverything(socket, bufferedReader, bufferedWriter);
+
     }
 
+    public void public ListenForMessage(){
+        new Thread(new Runnable() {
+            @Override
+            public void run(){
+                String msgGrpFromChat;
+
+                while (socket.isConnected()){
+                    try{
+                        msgGrpFromChat = bufferedReader.readLine();
+                        System.out.println(msgGrpFromChat);
+                    } catch (IOException e){
+                        closeEverything(socket, bufferedReader, bufferedWriter);
+                    }
+                }
+
+            }
+        }).start();
+    }
+     
+    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedReader)
+        try {
+            if (bufferedReader != null){
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null){
+                bufferedWriter.close();
+            }
+            if (socket != null){
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+    }
+
+    public static void main(String [] args ){
+        Scanner scanner = new scanner(system.in);
+        system.out.println("Entrer votre nom pour le groupe de chat:");
+        String username = scanner.nextLine();
+        Socket socket = new Socket(host:"localhost", port: 1234 );
+        Client client = new Client(socket, username );
+        client.ListenForMessage();
+        client.sendMessage();
+        
+    }
+
+    
 }
+
+
