@@ -6,40 +6,42 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Scanner; 
+import java.util.Scanner;
 
-public class client {
+public class Client {
 
-    private Socket socket; 
+    private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String username;
 
-    public client(Socket socket, String username ){
-        try{
-            this.socket = socket; 
+    public Client(Socket socket, String username) {
+        try {
+            this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.username = username; 
-        } catch (IOException e ) {
+            this.username = username;
+        } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
     public void sendMessage(){
-        try {
-            bufferedWriter.write(username + ":");
+        try{
+
+            bufferedWriter.write(username);
             bufferedWriter.newLine();
             bufferedWriter.flush();
-
-            Scanner scanner = new Scanner(System.in);
+            //efface toutes les données mises en mémoire tampon dans un objet BufferedWriter vers le flux sous-jacent.
+    
+            Scanner scanner = new Scanner(system.in);
             while (socket.isConnected()) {
                 String messageToSend = scanner.nextLine();
-                bufferedWriter.write(username + ":" + messageToSend);
+                bufferedWriter.write( username + ":" + messageToSend );
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
             }
-        } catch (IOException e) {
+        }  catch (IOException e){
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
@@ -48,12 +50,12 @@ public class client {
         new Thread(new Runnable() {
             @Override
             public void run(){
-                String msgGrpFromChat;
+                String msgFromGroupChat;
 
                 while (socket.isConnected()){
                     try{
-                        msgGrpFromChat = bufferedReader.readLine();
-                        System.out.println(msgGrpFromChat);
+                        msgFromGroupChat = bufferedReader.readLine();
+                        System.out.println(msgFromGroupChat);
                     } catch (IOException e){
                         closeEverything(socket, bufferedReader, bufferedWriter);
                     }
@@ -63,7 +65,7 @@ public class client {
         }).start();
     }
 
-    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
+    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         try {
             if (bufferedReader != null){
                 bufferedReader.close();
@@ -79,14 +81,16 @@ public class client {
         }
     }
 
-    public static void main(String [] args ){
+    public static void main(String[] args) throws Exception {
+
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Entrer votre nom pour le groupe de chat:");
+        System.out.println("Enter your name for the chat group:");
         String username = scanner.nextLine();
-        Socket socket = new Socket("localhost", 1234 );
-        client client = new client(socket, username );
+        Socket socket = new Socket("localhost", 1234);
+        Client client = new Client(socket, username);
         client.ListenForMessage();
         client.sendMessage();
 
     }
 }
+
