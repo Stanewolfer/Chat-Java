@@ -14,21 +14,25 @@ public class Client {
     private BufferedReader input;
     private PrintWriter output;
     private Scanner scanner;
+    private String pseudo;
 
     public Client(Socket socket) throws IOException{
         this.socket = socket;
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
         scanner = new Scanner(System.in);
+        System.out.print("Enter your pseudo: ");
+        pseudo = scanner.nextLine();
+        System.out.println("Welcome to the chat room, " + pseudo + "!");
     }
 
     public void start(){
         try{
             String message;
             while(true){
-                System.out.print("Enter message to send to server: ");
+                System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
-                output.println(message);
+                output.println(pseudo + ": " + message);
                 String response = input.readLine();
                 System.out.println("Received response from server: " + response);
             }

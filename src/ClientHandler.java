@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ClientHandler implements Runnable{
 
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
+    private String pseudo;
 
     public ClientHandler(Socket socket) throws IOException{
         this.socket = socket;
@@ -23,8 +26,9 @@ public class ClientHandler implements Runnable{
         try{
             String message;
             while((message = input.readLine()) != null){
-                System.out.println("Received message from client: " + message);
-                output.println("Echo from server: " + message);
+                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    System.out.println(formattedDate + " " + message);
+                    output.println(formattedDate + " " + message);
             }
         }catch(IOException e){
 
