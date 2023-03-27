@@ -59,7 +59,7 @@ public class ChatWindow extends JFrame {
         sendButton.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //sendMessage(messField.getText());
+                sendMessage(messField.getText());
                 messField.setText("");
             }
         });
