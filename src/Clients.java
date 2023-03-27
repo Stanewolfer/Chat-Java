@@ -1,21 +1,21 @@
 package src;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class Clients {
 
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String username;
 
-    public Client(Socket socket, String username) {
+    public Clients(Socket socket, String username) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -34,7 +34,7 @@ public class Client {
             bufferedWriter.flush();
             //efface toutes les données mises en mémoire tampon dans un objet BufferedWriter vers le flux sous-jacent.
     
-            Scanner scanner = new Scanner(system.in);
+            Scanner scanner = new Scanner(System.in);
             while (socket.isConnected()) {
                 String messageToSend = scanner.nextLine();
                 bufferedWriter.write( username + ":" + messageToSend );
@@ -60,7 +60,6 @@ public class Client {
                         closeEverything(socket, bufferedReader, bufferedWriter);
                     }
                 }
-
             }
         }).start();
     }
@@ -87,7 +86,7 @@ public class Client {
         System.out.println("Enter your name for the chat group:");
         String username = scanner.nextLine();
         Socket socket = new Socket("localhost", 1234);
-        Client client = new Client(socket, username);
+        Clients client = new Clients(socket, username);
         client.ListenForMessage();
         client.sendMessage();
 
