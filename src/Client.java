@@ -1,90 +1,51 @@
 package src;
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
 
-    private static Socket socket;
-    private static BufferedReader bufferedReader;
-    private static BufferedWriter bufferedWriter;
-    private static String username;
+    private Socket socket;
+    private BufferedReader input;
+    private PrintWriter output;
+    private Scanner scanner;
 
-    public Client(Socket socket, String username) {
-        try {
-            this.socket = socket;
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.username = username;
-        } catch (IOException e) {
-            closeEverything(socket, bufferedReader, bufferedWriter);
-        }
+    public Client(Socket socket) throws IOException{
+        this.socket = socket;
+        input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        output = new PrintWriter(socket.getOutputStream(), true);
+        scanner = new Scanner(System.in);
     }
 
-    public static void sendMessage(String string){
+    public void start(){
         try{
-
-            bufferedWriter.write(username);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-            //efface toutes les données mises en mémoire tampon dans un objet BufferedWriter vers le flux sous-jacent.
-    
-            Scanner scanner = new Scanner(System.in);
-            while (socket.isConnected()) {
-                String messageToSend = scanner.nextLine();
-                bufferedWriter.write( username + ":" + messageToSend );
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
+            String message;
+            while(true){
+                System.out.print("Enter message to send to server: ");
+                message = scanner.nextLine();
+                output.println(message);
+                String response = input.readLine();
+                System.out.println("Received response from server: " + response);
             }
-        }  catch (IOException e){
-            closeEverything(socket, bufferedReader, bufferedWriter);
-        }
-    }
+        }catch(IOException e){
 
-    public void ListenForMessage(){
-        new Thread(new Runnable() {
-            @Override
-            public void run(){
-                String msgFromGroupChat;
-
-                while (socket.isConnected()){
-                    try{
-                        msgFromGroupChat = bufferedReader.readLine();
-                        System.out.println(msgFromGroupChat);
-                    } catch (IOException e){
-                        closeEverything(socket, bufferedReader, bufferedWriter);
-                    }
-                }
-            }
-        }).start();
-    }
-
-    public static void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
-        try {
-            if (bufferedReader != null){
-                bufferedReader.close();
-            }
-            if (bufferedWriter != null){
-                bufferedWriter.close();
-            }
-            if (socket != null){
+        }finally{
+            try{
                 socket.close();
+            }catch(IOException e){
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws Exception {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your name for the chat group: ");
-        String username = scanner.nextLine();
+    public static void main(String[] args) throws UnknownHostException, IOException{
         Socket socket = new Socket("localhost", 1234);
-        Client client = new Client(socket, username);
-        client.ListenForMessage();;
-        client.sendMessage(username);
-
+        Client client = new Client(socket);
+        client.start();
     }
 }
-
