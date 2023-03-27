@@ -8,14 +8,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class Clients {
 
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String username;
 
-    public Client(Socket socket, String username) {
+    public Clients(Socket socket, String username) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -86,7 +86,7 @@ public class Client {
         System.out.println("Enter your name for the chat group:");
         String username = scanner.nextLine();
         Socket socket = new Socket("localhost", 1234);
-        Client client = new Client(socket, username);
+        Clients client = new Clients(socket, username);
         client.ListenForMessage();
         client.sendMessage();
 
