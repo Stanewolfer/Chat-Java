@@ -34,22 +34,28 @@ public class ChatWindow extends JFrame {
         
         // Ajouter les éléments de l'interface graphique ici
         JPanel chat = new JPanel();
-        chat.setBackground(new Color(40, 40, 40));
+        chat.setBackground(Color.darkGray);
         chatArea = new JTextArea();
         chatArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(chatArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(760, 500));
-        scrollPane.setBackground(new Color(50, 50, 50));
-        scrollPane.getViewport().setBackground(new Color(50, 50, 50));
+        scrollPane.setBackground(new Color(236,236,241));
+        scrollPane.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
+        scrollPane.getViewport().setBackground(new Color(100, 100, 100));
         chat.add(scrollPane);
         
         JPanel envoi_mess = new JPanel();
-        envoi_mess.setBackground(new Color(40, 40, 40));
+        envoi_mess.setBackground(Color.DARK_GRAY);
         messField = new JTextField(50);
         messField.setBackground(new Color(70, 70, 70));
-        messField.setForeground(Color.WHITE);
+        messField.setForeground(new Color(236,236,241));
+        messField.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
         JButton sendButton = new JButton("Send");
+        sendButton.setBackground(Color.GRAY);
+        sendButton.setForeground(new Color(236,236,241));
+        sendButton.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
+
         envoi_mess.add(messField);
         envoi_mess.add(sendButton);
         
