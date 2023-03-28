@@ -1,10 +1,15 @@
-import src.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+
 
 public class ChatWindow extends JFrame {
     private JTextArea chatArea;
@@ -47,6 +52,7 @@ public class ChatWindow extends JFrame {
         scrollPane.getViewport().setBackground(new Color(100, 100, 100));
         chat.add(scrollPane);
 
+        
         JPanel envoi_mess = new JPanel();
         envoi_mess.setBackground(Color.DARK_GRAY);
         messField = new JTextField(40);
@@ -59,9 +65,12 @@ public class ChatWindow extends JFrame {
         sendButton.setFont(new Font("Roboto",Font.ITALIC, 14));
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
                 String message = messField.getText();
                 Client.sendMessage(message);
                 chatArea.append("Client: " + message + "\n");
+=======
+>>>>>>> 27b41597529ad6a30774fd8d404c0ea2ae597a16
                 messField.setText("");
             }
         });
@@ -82,7 +91,24 @@ public class ChatWindow extends JFrame {
         setVisible(true);
     }
     
+    public class CsvReader {
+        public static String readCsvFile(String fileName) {
+            String result = "";
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    result += line + "\n";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+    }
+
     public static void main(String[] args) {
         new ChatWindow();
     }
+    
+    
 }
