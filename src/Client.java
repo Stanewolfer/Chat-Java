@@ -72,6 +72,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the IP address of the server: ");
         String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
+        scanner.close();
         if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
             Socket socket = new Socket(serverAddress, 1234);
             Client client = new Client(socket);
