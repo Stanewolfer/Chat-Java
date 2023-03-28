@@ -32,11 +32,7 @@ public class ClientHandler implements Runnable{
         }catch(IOException e){
 
         }finally{
-            try{
-                socket.close();
-            }catch(IOException e){
-
-            }
+            close();
         }
     }
 
