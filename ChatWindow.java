@@ -107,18 +107,13 @@ public class ChatWindow extends JFrame {
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
-        String message;
-        FileWriter historique = new FileWriter("messages.csv", true); // append to file if it already exists
-    
-        if (e.getSource() == sendButton) {
-            message = messField.getText(); // get text from messField
-            output.println(pseudo + ": " + message);
-            String response = input.readLine();
-            System.out.println("Received response from server: " + response);
-            historique.append(pseudo + "," + message + "," + response + "\n");
-            historique.flush();
-            historique.close();
+    public class CsvWriter {
+        public static void writeCsvFile(String fileName, String content) {
+            try (FileWriter writer = new FileWriter(fileName)) {
+                writer.write(content);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     
