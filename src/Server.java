@@ -38,8 +38,8 @@ public class Server {
         }
     }
     
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = null;
+
+    public static void main(String[] args) throws IOException{
         try {
             InetAddress wifiAddress = getWifiAddress();
             if (wifiAddress != null) {

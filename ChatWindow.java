@@ -5,8 +5,12 @@ import java.awt.Font;
 import java.awt.event.*;
 import javax.swing.*;
 
+import src.Client;
+import src.Server;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 
@@ -65,12 +69,9 @@ public class ChatWindow extends JFrame {
         sendButton.setFont(new Font("Roboto",Font.ITALIC, 14));
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
                 String message = messField.getText();
                 Client.sendMessage(message);
                 chatArea.append("Client: " + message + "\n");
-=======
->>>>>>> 27b41597529ad6a30774fd8d404c0ea2ae597a16
                 messField.setText("");
             }
         });
@@ -105,6 +106,23 @@ public class ChatWindow extends JFrame {
             return result;
         }
     }
+
+    public void actionPerformed(ActionEvent e) {
+        String message;
+        FileWriter historique = new FileWriter("messages.csv", true); // append to file if it already exists
+    
+        if (e.getSource() == sendButton) {
+            message = messField.getText(); // get text from messField
+            output.println(pseudo + ": " + message);
+            String response = input.readLine();
+            System.out.println("Received response from server: " + response);
+            historique.append(pseudo + "," + message + "," + response + "\n");
+            historique.flush();
+            historique.close();
+        }
+    }
+    
+            
 
     public static void main(String[] args) {
         new ChatWindow();
