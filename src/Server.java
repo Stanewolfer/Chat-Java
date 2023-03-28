@@ -23,7 +23,7 @@ public class Server {
                 thread.start();
             }
         }catch(IOException e){
-
+            System.err.println("An error occurred while communicating with the server: " + e.getMessage());
         }
     }
 
@@ -38,8 +38,13 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException{
-        ServerSocket serverSocket = new ServerSocket(1234);
-        Server server = new Server(serverSocket);
-        server.startServer();
+        try {
+            ServerSocket serverSocket = new ServerSocket(1234);
+            Server server = new Server(serverSocket);
+            System.out.println("Server started !");
+            server.startServer();
+        } catch (IOException e) {
+            System.err.println("An error occurred while starting the server: " + e.getMessage());
+        }
     }
 }
