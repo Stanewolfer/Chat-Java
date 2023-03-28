@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -37,7 +38,7 @@ public class Client {
                 System.out.println("Received response from server: " + response);
             }
         }catch(IOException e){
-
+            System.err.println("An error occurred while communicating with the server: " + e.getMessage());
         }finally{
             try{
                 socket.close();
@@ -47,9 +48,27 @@ public class Client {
         }
     }
 
-    public static void main(String[] args) throws UnknownHostException, IOException{
-        Socket socket = new Socket("localhost", 1234);
-        Client client = new Client(socket);
-        client.start();
+    public class ConnectionChecker {
+        public static boolean checkConnection(String host, int port) {
+            try {
+                InetAddress.getByName(host).isReachable(5000); // Vérifie si l'hôte est atteignable
+                new Socket(host, port).close(); // Vérifie si le port est ouvert
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        }
     }
+
+
+    public static void main(String[] args) throws UnknownHostException, IOException{
+        if (ConnectionChecker.checkConnection("localhost", 1234)) {
+            Socket socket = new Socket("localhost", 1234);
+            Client client = new Client(socket);
+            client.start();
+        } else {
+            System.out.println("Le serveur est indisponible.");
+        }
+    }
+    
 }
