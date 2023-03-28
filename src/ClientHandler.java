@@ -1,86 +1,50 @@
 package src;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ClientHandler implements Runnable{
 
-    public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
-    private String clientUsername;
+    private BufferedReader input;
+    private PrintWriter output;
 
-    public ClientHandler(Socket socket){
-        try{
-            this.socket = socket;
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            clientHandlers.add(this);
-            broadcastMessage("SERVER : " + clientUsername + "has entered the chat !");
-        }catch(IOException e){
-            closeEverything(socket, bufferedReader, bufferedWriter);
-
-
-        }
+    public ClientHandler(Socket socket) throws IOException{
+        this.socket = socket;
+        input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        output = new PrintWriter(socket.getOutputStream(), true);
     }
 
     @Override
     public void run() {
-        String messageFromClient;
-
-        while (socket.isConnected()) {
-            try {
-                messageFromClient = bufferedReader.readLine();
-                broadcastMessage(messageFromClient);
-                
-            } catch (IOException e) {
-                closeEverything(socket, bufferedReader, bufferedWriter);
-                break;
+        try{
+            String message;
+            while((message = input.readLine()) != null){
+                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    System.out.println(formattedDate + " " + message);
+                    output.println(formattedDate + " " + message);
             }
-        }
-    }   
+        }catch(IOException e){
 
-    public void broadcastMessage(String messageToSend) {
-        for(ClientHandler clientHandler : clientHandlers) {
-            try {
-                if(!clientHandler.clientUsername.equals(clientUsername)){
-                    clientHandler.bufferedWriter.write(messageToSend);
-                    clientHandler.bufferedWriter.newLine();
-                    clientHandler.bufferedWriter.flush();
-                }
-            } catch (IOException e) {
-                closeEverything(socket, bufferedReader, bufferedWriter);
-                break;
-            }
-        }
-    }
-
-    public void removeClientHandler() {
-        clientHandlers.remove(this);
-        broadcastMessage("SERVER : " + clientUsername + "has left the chat !");
-    }
-
-    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
-        removeClientHandler();
-        try {
-            if (bufferedReader != null){
-                bufferedReader.close();
-            }
-            if (bufferedWriter != null){
-                bufferedWriter.close();
-            }
-            if (socket != null){
+        }finally{
+            try{
                 socket.close();
+            }catch(IOException e){
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public void close(){
+        try{
+            socket.close();
+        }catch(IOException e){
+
         }
     }
 }
-
