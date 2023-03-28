@@ -61,7 +61,7 @@ public class Client {
                 InetAddress.getByName(host).isReachable(5000); // Vérifie si l'hôte est atteignable
                 new Socket(host, port).close(); // Vérifie si le port est ouvert
                 return true;
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 return false;
             }
         }
