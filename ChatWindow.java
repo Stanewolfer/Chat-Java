@@ -5,6 +5,12 @@ import java.awt.Font;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+
+
 public class ChatWindow extends JFrame {
     private JTextArea chatArea;
     private JTextField messField;
@@ -78,7 +84,24 @@ public class ChatWindow extends JFrame {
         setVisible(true);
     }
     
+    public class CsvReader {
+        public static String readCsvFile(String fileName) {
+            String result = "";
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    result += line + "\n";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+    }
+
     public static void main(String[] args) {
         new ChatWindow();
     }
+    
+    
 }
