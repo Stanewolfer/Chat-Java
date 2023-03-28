@@ -47,6 +47,7 @@ public class ChatWindow extends JFrame {
         scrollPane.getViewport().setBackground(new Color(100, 100, 100));
         chat.add(scrollPane);
 
+        
         JPanel envoi_mess = new JPanel();
         envoi_mess.setBackground(Color.DARK_GRAY);
         messField = new JTextField(40);

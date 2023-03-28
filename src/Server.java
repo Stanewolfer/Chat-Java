@@ -31,13 +31,11 @@ public class Server {
         try {
             if(serverSocket != null ){
                 serverSocket.close();
-                System.out.println("Server socket closed.");
             }
         } catch (IOException e) {
-            System.err.println("An error occurred while closing the server socket: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-    
 
     public static void main(String[] args) throws IOException{
         try {
