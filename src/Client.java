@@ -79,5 +79,13 @@ public class Client {
         } else {
             System.out.println("Le serveur est indisponible.");
         }
+<<<<<<< HEAD
+    }
+
+    public static void sendMessage(String text) {
+    }
+    
+=======
     }    
+>>>>>>> 27b41597529ad6a30774fd8d404c0ea2ae597a16
 }

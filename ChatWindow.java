@@ -65,6 +65,12 @@ public class ChatWindow extends JFrame {
         sendButton.setFont(new Font("Roboto",Font.ITALIC, 14));
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
+                String message = messField.getText();
+                Client.sendMessage(message);
+                chatArea.append("Client: " + message + "\n");
+=======
+>>>>>>> 27b41597529ad6a30774fd8d404c0ea2ae597a16
                 messField.setText("");
             }
         });
