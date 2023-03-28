@@ -68,13 +68,15 @@ public class Client {
 
 
     public static void main(String[] args) throws UnknownHostException, IOException{
-        if (ConnectionChecker.checkConnection("localhost", 1234)) {
-            Socket socket = new Socket("localhost", 1234);
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the IP address of the server: ");
+        String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
+        if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
+            Socket socket = new Socket(serverAddress, 1234);
             Client client = new Client(socket);
             client.start();
         } else {
             System.out.println("Le serveur est indisponible.");
         }
-    }
-    
+    }    
 }

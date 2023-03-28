@@ -1,6 +1,7 @@
 package src;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -38,15 +39,37 @@ public class Server {
         }
     }
     
-
-    public void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = null;
         try {
-            ServerSocket serverSocket = new ServerSocket(1234);
-            Server server = new Server(serverSocket);
-            System.out.println("Server started !");
-            server.startServer();
+            InetAddress wifiAddress = getWifiAddress();
+            if (wifiAddress != null) {
+                serverSocket = new ServerSocket(1234, 50, wifiAddress);
+                System.out.println("Server started on IP address: " + wifiAddress.getHostAddress());
+                Server server = new Server(serverSocket);
+                server.startServer();
+            } else {
+                System.out.println("No WiFi network found.");
+            }
         } catch (IOException e) {
             System.err.println("An error occurred while starting the server: " + e.getMessage());
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
         }
     }
+    
+    private static InetAddress getWifiAddress() throws IOException {
+        InetAddress wifiAddress = null;
+        InetAddress localhost = InetAddress.getLocalHost();
+        InetAddress[] allAddresses = InetAddress.getAllByName(localhost.getHostName());
+        for (InetAddress address : allAddresses) {
+            if (address.isSiteLocalAddress() && !address.equals(localhost)) {
+                wifiAddress = address;
+                break;
+            }
+        }
+        return wifiAddress;
+    }
+    
 }
