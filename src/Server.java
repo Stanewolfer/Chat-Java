@@ -6,10 +6,10 @@ import java.net.Socket;
 
 public class Server {
 
-    private ServerSocket serverSocket;
+    private static ServerSocket serverSocket;
 
     public Server(ServerSocket serverSocket){
-        this.serverSocket = serverSocket;
+        Server.serverSocket = serverSocket;
     }
 
     public void startServer(){
@@ -39,7 +39,7 @@ public class Server {
     }
     
 
-    public static void main(String[] args) throws IOException{
+    public void main(String[] args) throws IOException{
         try {
             ServerSocket serverSocket = new ServerSocket(1234);
             Server server = new Server(serverSocket);

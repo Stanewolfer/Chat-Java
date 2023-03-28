@@ -1,6 +1,7 @@
 package src;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -30,12 +31,16 @@ public class Client {
     public void start(){
         try{
             String message;
+            FileWriter historique = new FileWriter("messages.csv");
             while(true){
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
                 System.out.println("Received response from server: " + response);
+                historique.append(pseudo + "," + message + "," + response + "\n");
+                historique.flush();
+                historique.close();
             }
         }catch(IOException e){
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());
@@ -43,10 +48,11 @@ public class Client {
             try{
                 socket.close();
             }catch(IOException e){
-
+    
             }
         }
     }
+    
 
     public class ConnectionChecker {
         public static boolean checkConnection(String host, int port) {
