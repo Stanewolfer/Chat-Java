@@ -9,9 +9,9 @@ import javax.swing.*;
 public class ChatWindow extends JFrame {
     private JTextArea chatArea;
     private JTextField messField;
-    private JTextField inputField;
+    //private JTextField inputField;
 
-    private boolean notificationsEnabled = true;
+    //private boolean notificationsEnabled = true;
 
     public ChatWindow() {
         setTitle("Chat Window");
@@ -43,21 +43,20 @@ public class ChatWindow extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(760, 500));
         scrollPane.setBackground(new Color(236,236,241));
-        scrollPane.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
+        scrollPane.setFont(new Font("Roboto", Font.CENTER_BASELINE, 14));
         scrollPane.getViewport().setBackground(new Color(100, 100, 100));
         chat.add(scrollPane);
 
         JPanel envoi_mess = new JPanel();
         envoi_mess.setBackground(Color.DARK_GRAY);
-        messField = new JTextField(50);
+        messField = new JTextField(40);
         messField.setBackground(new Color(70, 70, 70));
         messField.setForeground(new Color(236,236,241));
-        messField.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
-        messField.setText("Type your message here...");
+        messField.setFont(new Font("Roboto", Font.CENTER_BASELINE, 14));
         JButton sendButton = new JButton("Send");
         sendButton.setBackground(Color.GRAY);
         sendButton.setForeground(new Color(236,236,241));
-        sendButton.setFont(new Font("Comic Sans MS", Font.ITALIC, 14));
+        sendButton.setFont(new Font("Roboto",Font.ITALIC, 14));
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Client.sendMessage(messField.getText());
