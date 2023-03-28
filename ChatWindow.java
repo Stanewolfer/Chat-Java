@@ -6,7 +6,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import src.Client;
-import src.Server;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
