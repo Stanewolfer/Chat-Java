@@ -1,8 +1,7 @@
-import src.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -59,7 +58,6 @@ public class ChatWindow extends JFrame {
         sendButton.setFont(new Font("Roboto",Font.ITALIC, 14));
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Client.sendMessage(messField.getText());
                 messField.setText("");
             }
         });
