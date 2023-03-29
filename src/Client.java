@@ -23,8 +23,13 @@ public class Client {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
         scanner = new Scanner(System.in);
-        System.out.print("Enter your pseudo: ");
+        System.out.print("Enter your pseudo (max 16 characters): ");
         pseudo = scanner.nextLine();
+        while(pseudo.length() > 16){
+            System.out.println("La taille de votre pseudo est trop long. Veuillez en choisir un qui fait 16 caractères ou moins");
+            System.out.print("Enter your pseudo (max 16 characters): ");
+            pseudo = scanner.nextLine();
+            }
         System.out.println("Welcome to the chat room, " + pseudo + "!");
     }
 
@@ -35,6 +40,10 @@ public class Client {
             while(true){
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
+                while(message.length() > 300){
+                    System.out.println("La taille de votre message est trop long. Veuillez en réecrire un plus court (max 300 caractères)");
+                    message = scanner.nextLine();
+                    }
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
                 if (response != null) {
