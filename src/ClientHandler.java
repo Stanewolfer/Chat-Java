@@ -26,14 +26,14 @@ public class ClientHandler implements Runnable{
         try{
             String message;
             while((message = input.readLine()) != null){
-                    String[] splitResponse = message.split(":");
-                    senderPseudo = splitResponse[0];
-                    String senderMessage = splitResponse[1];
-                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                    System.out.println(formattedDate + " " + senderPseudo + ": " + senderMessage);
-                    if (!senderPseudo.equals(this.senderPseudo)) {
-                        output.println(formattedDate + " " + senderPseudo + ": " + senderMessage);
-                    }
+                String[] splitResponse = message.split(":");
+                senderPseudo = splitResponse[0];
+                String senderMessage = splitResponse[1];
+                String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                System.out.println(formattedDate + " " + senderPseudo + ": " + senderMessage);
+                if (!senderPseudo.equals(this.senderPseudo)) {
+                    output.println(formattedDate + " " + senderPseudo + ": " + senderMessage);
+                }
             }
         }catch(IOException e){
 
