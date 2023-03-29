@@ -1,11 +1,10 @@
+package src;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.*;
 import javax.swing.*;
-
-import src.Client;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -91,30 +90,7 @@ public class ChatWindow extends JFrame {
         setVisible(true);
     }
     
-    public class CsvReader {
-        public static String readCsvFile(String fileName) {
-            String result = "";
-            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    result += line + "\n";
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-    }
-
-    public class CsvWriter {
-        public static void writeCsvFile(String fileName, String content) {
-            try (FileWriter writer = new FileWriter(fileName)) {
-                writer.write(content);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    
     
             
 
