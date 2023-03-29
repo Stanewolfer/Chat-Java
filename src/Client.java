@@ -49,11 +49,7 @@ public class Client {
             
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
-                if (response.contains(pseudo)) {
-                	// ignore
-                } else {
-                	System.out.println(response);
-                }
+                System.out.println(response);
             }
         }catch(IOException e){
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());
