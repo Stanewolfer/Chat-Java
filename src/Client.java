@@ -38,7 +38,6 @@ public class Client {
     public void start(){
         try{
             String message;
-            FileWriter historique = new FileWriter("messages.csv");
             while(true){
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
@@ -54,10 +53,7 @@ public class Client {
                 	// ignore
                 } else {
                 	System.out.println(response);
-                    historique.append(pseudo + "," + message + "," + response + "\n");
                 }
-                historique.flush();
-                historique.close();
             }
         }catch(IOException e){
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());
