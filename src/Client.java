@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-
 public class Client {
 
     private Socket socket;
@@ -38,10 +37,11 @@ public class Client {
                 message = scanner.nextLine();
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
-                System.out.println("Received response from server: " + response);
-                historique.append(pseudo + "," + message + "," + response + "\n");
-                historique.flush();
-                historique.close();
+                if (response != null) {
+                    System.out.println("Received response from server: " + response);
+                    historique.append(pseudo + "," + message + "," + response + "\n");
+                    historique.flush();
+                }
             }
         }catch(IOException e){
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());
