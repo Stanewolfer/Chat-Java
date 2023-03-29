@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 
+
 public class Client {
 
     private Socket socket;
@@ -50,7 +51,7 @@ public class Client {
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
                 if (response.contains(pseudo)) {
-                	// ignore
+                    // ignore
                 } else {
                     String[] splitResponse = response.split(":");
                     String senderPseudo = splitResponse[0];

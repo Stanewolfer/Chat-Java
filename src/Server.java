@@ -52,9 +52,6 @@ public class Server {
             }
         } catch (IOException e) {
             System.err.println("An error occurred while starting the server: " + e.getMessage());
-            if (serverSocket != null) {
-                serverSocket.close();
-            }
         }
     }
     
