@@ -7,8 +7,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Scanner;
-
+import java.util.Set;
 
 public class Client {
 
@@ -23,8 +24,18 @@ public class Client {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
         scanner = new Scanner(System.in);
-        System.out.print("Enter your pseudo: ");
+        System.out.print("Enter your pseudo (max 16 characters): ");
         pseudo = scanner.nextLine();
+        if (pseudo.length() == 0){
+            System.out.println("La taille de votre pseudo est trop court. Veuillez en choisir un qui fait 16 caractères ou moins");
+            System.out.print("Enter your pseudo (max 16 characters): ");
+            pseudo = scanner.nextLine();
+        }
+        else if(pseudo.length() > 16){
+            System.out.println("La taille de votre pseudo est trop long. Veuillez en choisir un qui fait 16 caractères ou moins");
+            System.out.print("Enter your pseudo (max 16 characters): ");
+            pseudo = scanner.nextLine();
+            }
         System.out.println("Welcome to the chat room, " + pseudo + "!");
     }
 
@@ -34,6 +45,10 @@ public class Client {
             while(true){
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
+                if(message.length() > 300){
+                    System.out.println("La taille de votre message est trop long. Veuillez en réecrire un plus court (max 300 caractères)");
+                    message = scanner.nextLine();
+                    }
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
                 System.out.println("Received response from server: " + response);
@@ -44,11 +59,10 @@ public class Client {
             try{
                 socket.close();
             }catch(IOException e){
-    
+
             }
         }
     }
-    
 
     public class ConnectionChecker {
         public static boolean checkConnection(String host, int port) {
@@ -67,10 +81,10 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the IP address of the server: ");
         String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
-        scanner.close();
         if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
             Socket socket = new Socket(serverAddress, 1234);
             Client client = new Client(socket);
+            clients.add(new ClientHandler(socket, clients));
             client.start();
         } else {
             System.out.println("Le serveur est indisponible.");
@@ -80,3 +94,4 @@ public class Client {
     public static void sendMessage(String message) {
     }    
 }
+
