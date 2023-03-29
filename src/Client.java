@@ -49,42 +49,50 @@ public class Client {
             
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
-                System.out.println(response);
+                if (response.contains(pseudo)) {
+                	// ignore
+                } else {
+                	System.out.println(response);
+                }
             }
         }catch(IOException e){
-            System.err.println("An error occurred while communicating with the server: " + e.getMessage());
-        }finally{
-            try{
-                socket.close();
-            }catch(IOException e){
-    
-            }
-        }
-    }   
 
-    public class ConnectionChecker {
-        public static boolean checkConnection(String host, int port) {
-            try {
-                InetAddress.getByName(host).isReachable(5000); // Vérifie si l'hôte est atteignable
-                new Socket(host, port).close(); // Vérifie si le port est ouvert
-                return true;
-            } catch (IOException ex) {
-                return false;
-            }
+        }finally{
+            close();
         }
     }
 
+    public void close(){
+        try{
+            socket.close();
+        }catch(IOException e){
 
-    public static void main(String[] args) throws UnknownHostException, IOException{
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the IP address of the server: ");
-        String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
-        if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
-            Socket socket = new Socket(serverAddress, 1234);
+        }
+    }
+
+    public static void main(String[] args) throws UnknownHostException, IOException {
+        InetAddress wifiAddress = getWifiAddress();
+        if (wifiAddress != null) {
+            Socket socket = new Socket(wifiAddress, 1234);
+            System.out.println("Connected to server at IP address: " + wifiAddress.getHostAddress());
             Client client = new Client(socket);
             client.start();
         } else {
-            System.out.println("Le serveur est indisponible.");
+            System.out.println("No WiFi network found.");
         }
-    }    
+    }
+    
+    private static InetAddress getWifiAddress() throws UnknownHostException {
+        InetAddress wifiAddress = null;
+        InetAddress localhost = InetAddress.getLocalHost();
+        InetAddress[] allAddresses = InetAddress.getAllByName(localhost.getHostName());
+        for (InetAddress address : allAddresses) {
+            if (address.isSiteLocalAddress() && !address.equals(localhost)) {
+                wifiAddress = address;
+                break;
+            }
+        }
+        return wifiAddress;
+    }
+
 }
