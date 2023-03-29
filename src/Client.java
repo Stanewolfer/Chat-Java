@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 
 
+
 public class Client {
 
     private Socket socket;
@@ -18,6 +19,7 @@ public class Client {
     private PrintWriter output;
     private Scanner scanner;
     private String pseudo;
+    private String response;
 
     public Client(Socket socket) throws IOException{
         this.socket = socket;
@@ -42,25 +44,24 @@ public class Client {
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
                 while(message.length() > 300 || message.length() == 0){
-                    System.out.println("Veuillez réecrire votre message!r");
+                    System.out.println("Veuillez réecrire votre message!");
                     System.out.print(pseudo + ": ");
                     message = scanner.nextLine();
                 }
             
                 output.println(pseudo + ": " + message);
-                String response = input.readLine();
-                if (response.contains(pseudo)) {
-                    // ignore
-                } else {
-                    String[] splitResponse = response.split(":");
-                    String senderPseudo = splitResponse[0];
-                    String senderMessage = splitResponse[1];
-                    System.out.println(senderPseudo + ": " + senderMessage);
-                }
             }
-        }catch(IOException e){
-
-        }finally{
+            String response = input.readLine();
+            if (response.contains(pseudo)) {
+                // ignore
+            } else {
+                String[] splitResponse = response.split(":");
+                String senderPseudo = splitResponse[0];
+                String senderMessage = splitResponse[1];
+                System.out.println(senderPseudo + ": " + senderMessage);
+            }
+        }
+        finally{
             close();
         }
     }
@@ -79,7 +80,7 @@ public class Client {
                 InetAddress.getByName(host).isReachable(5000); // Vérifie si l'hôte est atteignable
                 new Socket(host, port).close(); // Vérifie si le port est ouvert
                 return true;
-            } catch (IOException ex) {
+            } catch (IOException e) {
                 return false;
             }
         }
