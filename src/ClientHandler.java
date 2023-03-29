@@ -7,20 +7,18 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
 
 public class ClientHandler implements Runnable{
 
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
-    private Set<ClientHandler> clients;
+    private String senderPseudo;
 
-    public ClientHandler(Socket socket, Set<ClientHandler> clients) throws IOException{
+    public ClientHandler(Socket socket) throws IOException{
         this.socket = socket;
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
-        this.clients = clients;
     }
 
     @Override
@@ -28,12 +26,13 @@ public class ClientHandler implements Runnable{
         try{
             String message;
             while((message = input.readLine()) != null){
+                    String[] splitResponse = message.split(":");
+                    senderPseudo = splitResponse[0];
+                    String senderMessage = splitResponse[1];
                     String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                    System.out.println(formattedDate + " " + message);
-                    for (ClientHandler clientHandler : clients) {
-                        if (clientHandler != this) {
-                            clientHandler.output.println(formattedDate + " " + message);
-                        }
+                    System.out.println(formattedDate + " " + senderPseudo + ": " + senderMessage);
+                    if (!senderPseudo.equals(this.senderPseudo)) {
+                        output.println(formattedDate + " " + senderPseudo + ": " + senderMessage);
                     }
             }
         }catch(IOException e){

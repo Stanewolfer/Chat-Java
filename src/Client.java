@@ -7,9 +7,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
+
+
 
 public class Client {
 
@@ -26,16 +26,12 @@ public class Client {
         scanner = new Scanner(System.in);
         System.out.print("Enter your pseudo (max 16 characters): ");
         pseudo = scanner.nextLine();
-        if (pseudo.length() == 0){
-            System.out.println("La taille de votre pseudo est trop court. Veuillez en choisir un qui fait 16 caractères ou moins");
+
+        while(pseudo.length() == 0 || pseudo.length() > 16){
+            System.out.println("Veuillez choisir un pseudo qui fait 16 caractères ou moins");
             System.out.print("Enter your pseudo (max 16 characters): ");
             pseudo = scanner.nextLine();
         }
-        else if(pseudo.length() > 16){
-            System.out.println("La taille de votre pseudo est trop long. Veuillez en choisir un qui fait 16 caractères ou moins");
-            System.out.print("Enter your pseudo (max 16 characters): ");
-            pseudo = scanner.nextLine();
-            }
         System.out.println("Welcome to the chat room, " + pseudo + "!");
     }
 
@@ -45,24 +41,37 @@ public class Client {
             while(true){
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
-                if(message.length() > 300){
-                    System.out.println("La taille de votre message est trop long. Veuillez en réecrire un plus court (max 300 caractères)");
+                while(message.length() > 300 || message.length() == 0){
+                    System.out.println("Veuillez réecrire votre message!r");
+                    System.out.print(pseudo + ": ");
                     message = scanner.nextLine();
-                    }
+                }
+            
                 output.println(pseudo + ": " + message);
                 String response = input.readLine();
-                System.out.println("Received response from server: " + response);
+                if (response.contains(pseudo)) {
+                    // ignore
+                } else {
+                    String[] splitResponse = response.split(":");
+                    String senderPseudo = splitResponse[0];
+                    String senderMessage = splitResponse[1];
+                    System.out.println(senderPseudo + ": " + senderMessage);
+                }
             }
         }catch(IOException e){
-            System.err.println("An error occurred while communicating with the server: " + e.getMessage());
+
         }finally{
+            close();
+        }
+    }
+
+    public void close(){
             try{
                 socket.close();
             }catch(IOException e){
-
+    
             }
-        }
-    }
+    }   
 
     public class ConnectionChecker {
         public static boolean checkConnection(String host, int port) {
@@ -78,20 +87,16 @@ public class Client {
 
 
     public static void main(String[] args) throws UnknownHostException, IOException{
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the IP address of the server: ");
-        String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
-        if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
-            Socket socket = new Socket(serverAddress, 1234);
-            Client client = new Client(socket);
-            clients.add(new ClientHandler(socket, clients));
-            client.start();
-        } else {
-            System.out.println("Le serveur est indisponible.");
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Enter the IP address of the server: ");
+            String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
+            if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
+                Socket socket = new Socket(serverAddress, 1234);
+                Client client = new Client(socket);
+                client.start();
+            } else {
+                System.out.println("Le serveur est indisponible.");
+            }
         }
     }
-
-    public static void sendMessage(String message) {
-    }    
 }
-
