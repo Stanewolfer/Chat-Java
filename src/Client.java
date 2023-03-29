@@ -27,7 +27,12 @@ public class Client {
         scanner = new Scanner(System.in);
         System.out.print("Enter your pseudo (max 16 characters): ");
         pseudo = scanner.nextLine();
-        while(pseudo.length() > 16){
+        if (pseudo.length() == 0){
+            System.out.println("La taille de votre pseudo est trop court. Veuillez en choisir un qui fait 16 caractères ou moins");
+            System.out.print("Enter your pseudo (max 16 characters): ");
+            pseudo = scanner.nextLine();
+        }
+        else if(pseudo.length() > 16){
             System.out.println("La taille de votre pseudo est trop long. Veuillez en choisir un qui fait 16 caractères ou moins");
             System.out.print("Enter your pseudo (max 16 characters): ");
             pseudo = scanner.nextLine();
@@ -42,7 +47,7 @@ public class Client {
             while(true){
                 System.out.print(pseudo + ": ");
                 message = scanner.nextLine();
-                while(message.length() > 300){
+                if(message.length() > 300){
                     System.out.println("La taille de votre message est trop long. Veuillez en réecrire un plus court (max 300 caractères)");
                     message = scanner.nextLine();
                     }
