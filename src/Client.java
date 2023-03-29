@@ -66,11 +66,11 @@ public class Client {
     }
 
     public void close(){
-            try{
-                socket.close();
-            }catch(IOException e){
-    
-            }
+        try{
+            socket.close();
+        }catch(IOException e){
+
+        }
     }   
 
     public class ConnectionChecker {
