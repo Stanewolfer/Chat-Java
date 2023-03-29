@@ -8,7 +8,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Client {
 
@@ -41,6 +43,7 @@ public class Client {
                     System.out.println("Received response from server: " + response);
                     historique.append(pseudo + "," + message + "," + response + "\n");
                     historique.flush();
+                    historique.close();
                 }
             }
         }catch(IOException e){
@@ -49,11 +52,10 @@ public class Client {
             try{
                 socket.close();
             }catch(IOException e){
-    
+
             }
         }
     }
-    
 
     public class ConnectionChecker {
         public static boolean checkConnection(String host, int port) {
@@ -72,12 +74,15 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the IP address of the server: ");
         String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
+        Set<ClientHandler> clients = new HashSet<>();
         if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
             Socket socket = new Socket(serverAddress, 1234);
             Client client = new Client(socket);
+            clients.add(new ClientHandler(socket, clients));
             client.start();
         } else {
             System.out.println("Le serveur est indisponible.");
         }
     }    
 }
+
