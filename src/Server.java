@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class Server implements Runnable {
                 broadcast(nickname + " has joined the server!");
                 String message;
                 while ((message = in.readLine()) != null) {
-                    if (message.startsWith("/nick ")) {
+                    if (message.startsWith("/rename ")) {
                         String[] messageSplit = message.split(" ", 2);
                         if (messageSplit.length == 2) {
                             broadcast(nickname + " is now known as: " + messageSplit[1]);
@@ -120,7 +119,7 @@ public class Server implements Runnable {
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server...");
         ServerSocket serverSocket = new ServerSocket(9999);
-        String ipAddress = "192.168.86.1";
+        String ipAddress = "192.168.86.30";
        
         System.out.println("Server running on IP address " + ipAddress + ", port 9999");
         Server server = new Server(serverSocket);
