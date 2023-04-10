@@ -4,8 +4,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
 
 public class Client implements Runnable {
 
@@ -17,10 +15,18 @@ public class Client implements Runnable {
     @Override
     public void run() {
         try {
-            Socket client = new Socket("127.0.0.1", 9999);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            InetAddress serverAddress = InetAddress.getLocalHost();
+            System.out.println("Server IP address: " + serverAddress.getHostAddress());
+            System.out.print("Enter server IP address (press enter to use local address): ");
+            String ipAddress = reader.readLine().trim();
+            if (!ipAddress.isEmpty()) {
+                serverAddress = InetAddress.getByName(ipAddress);
+            }
+            client = new Socket(serverAddress, 9999);
             out = new PrintWriter(client.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            
+
             InputHandler inputHandler = new InputHandler();
             Thread t = new Thread(inputHandler);
             t.start();
@@ -68,28 +74,10 @@ public class Client implements Runnable {
         }
 
     }
-    public class ConnectionChecker {
-        public static boolean checkConnection(String host, int port) {
-            try {
-                InetAddress.getByName(host).isReachable(5000); // Vérifie si l'hôte est atteignable
-                new Socket(host, port).close(); // Vérifie si le port est ouvert
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        }
-    }
-    public static void main(String[] args) throws UnknownHostException, IOException{
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Enter the IP address of the server: ");
-            String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
-            if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
-                Socket socket = new Socket(serverAddress, 1234);
-                Client client = new Client();
-                client.run();
-            } else {
-                System.out.println("Le serveur est indisponible.");
-            }
-        }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("Connecting to server...");
+        Client client = new Client();
+        client.run();
     }
 }
