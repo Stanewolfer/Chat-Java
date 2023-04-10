@@ -16,13 +16,10 @@ public class Client implements Runnable {
     public void run() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            InetAddress serverAddress = InetAddress.getLocalHost();
-            System.out.println("Server IP address: " + serverAddress.getHostAddress());
-            System.out.print("Enter server IP address (press enter to use local address): ");
+            InetAddress serverAddress;
+            System.out.print("Enter server IP address: ");
             String ipAddress = reader.readLine().trim();
-            if (!ipAddress.isEmpty()) {
-                serverAddress = InetAddress.getByName(ipAddress);
-            }
+            serverAddress = InetAddress.getByName(ipAddress);
             client = new Socket(serverAddress, 9999);
             out = new PrintWriter(client.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -35,23 +32,36 @@ public class Client implements Runnable {
             while ((inMessage = in.readLine()) != null) {
                 System.out.println(inMessage);
             }
-        } catch (IOException e) {
+
+            // wait for input thread to complete before shutting down
+            t.join();
             shutdown();
+        } catch (IOException e) {
+            System.err.println("An I/O error occurred while connecting to the server.");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.err.println("The input thread was interrupted while waiting to join.");
+            e.printStackTrace();
         }
     }
 
     public void shutdown() {
-        done = true;
         try {
-            in.close();
-            out.close();
-            if (!client.isClosed()){
+            done = true;
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            if (client != null && !client.isClosed()) {
                 client.close();
             }
         } catch (IOException e) {
             // ignore
         }
     }
+
 
     class InputHandler implements Runnable {
 
@@ -69,13 +79,15 @@ public class Client implements Runnable {
                     }
                 }
             } catch (IOException e) {
+                System.err.println("An I/O error occurred while handling user input.");
+                e.printStackTrace();
                 shutdown();
             }
         }
 
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         System.out.println("Connecting to server...");
         Client client = new Client();
         client.run();

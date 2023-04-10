@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Server implements Runnable {
                 connections.add(handler);
                 pool.execute(handler);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             shutdown();
         }
     }
@@ -117,13 +118,24 @@ public class Server implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
-        try {
-            ServerSocket serverSocket = new ServerSocket(9999, 1);
-            System.out.println("Server started on port 9999...");
-            Server server = new Server(serverSocket);
-            server.run();
-        } catch (IOException e) {
-            System.err.println("Could not start server: " + e.getMessage());
+        System.out.println("Starting server...");
+        ServerSocket serverSocket = new ServerSocket(9999);
+        String ipAddress = "192.168.86.1";
+       
+        System.out.println("Server running on IP address " + ipAddress + ", port 9999");
+        Server server = new Server(serverSocket);
+        new Thread(server).start();
+        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+        String message;
+        while ((message = console.readLine()) != null) {
+            if (message.equals("/quit")) {
+            server.shutdown();
+            break;
+            }else if (message.equals("/help")) {
+            System.out.println("Available commands: /quit, /help");
+            }else {
+            System.out.println("Unknown command. Type /help for a list of available commands.");
+            }
         }
     }
 }
