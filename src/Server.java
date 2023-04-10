@@ -22,7 +22,7 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            server = new ServerSocket(1234);
+            server = new ServerSocket(9999);
             pool = Executors.newCachedThreadPool();
             while (!done) {
                 Socket client  = server.accept();
@@ -74,7 +74,7 @@ public class Server implements Runnable {
                 out.println("Entrer un pseudo : ");
                 nickname = in.readLine();
                 System.out.println(nickname + " est connecté !");
-                broadcast(nickname + "a rejoint le serveur !");
+                broadcast(nickname + " a rejoint le serveur !");
                 String message;
                 while ((message = in.readLine()) != null) {
                     if (message.startsWith("/nick ")) {
