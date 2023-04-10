@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class Server implements Runnable {
     private boolean done;
     private ExecutorService pool;
 
-    private Server() {
+    private Server(ServerSocket serverSocket) {
         connections = new ArrayList<>();
         done = false;
     }
@@ -22,7 +23,6 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            server = new ServerSocket(9999);
             pool = Executors.newCachedThreadPool();
             while (!done) {
                 Socket client  = server.accept();
@@ -113,8 +113,34 @@ public class Server implements Runnable {
             }
         }
     }
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.run();
+    
+    private static InetAddress getWifiAddress() throws IOException {
+        InetAddress wifiAddress = null;
+        InetAddress localhost = InetAddress.getLocalHost();
+        InetAddress[] allAddresses = InetAddress.getAllByName(localhost.getHostName());
+        for (InetAddress address : allAddresses) {
+            if (address.isSiteLocalAddress() && !address.equals(localhost)) {
+                wifiAddress = address;
+                break;
+            }
+        }
+        return wifiAddress;
+    }
+
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = null;
+        try {
+            InetAddress wifiAddress = getWifiAddress();
+            if (wifiAddress != null) {
+                serverSocket = new ServerSocket(1234, 50, wifiAddress);
+                System.out.println("Server started on IP address: " + wifiAddress.getHostAddress());
+                Server server = new Server(serverSocket);
+                server.run();
+            } else {
+                System.out.println("No WiFi network found.");
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred while starting the server: " + e.getMessage());
+        }
     }
 }
