@@ -20,7 +20,7 @@ public class Client implements Runnable {
             System.out.print("Enter server IP address: ");
             String ipAddress = reader.readLine().trim();
             serverAddress = InetAddress.getByName(ipAddress);
-            client = new Socket("192.168.86.30", 9999);
+            client = new Socket(serverAddress, 9999);
             out = new PrintWriter(client.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
