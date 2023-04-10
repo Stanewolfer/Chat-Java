@@ -2,7 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Client implements Runnable {
 
@@ -65,8 +68,28 @@ public class Client implements Runnable {
         }
 
     }
-    public static void main(String[] args) {
-        Client client = new Client();
-        client.run();
+    public class ConnectionChecker {
+        public static boolean checkConnection(String host, int port) {
+            try {
+                InetAddress.getByName(host).isReachable(5000); // Vérifie si l'hôte est atteignable
+                new Socket(host, port).close(); // Vérifie si le port est ouvert
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+    }
+    public static void main(String[] args) throws UnknownHostException, IOException{
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Enter the IP address of the server: ");
+            String serverAddress = scanner.nextLine(); // l'utilisateur saisit l'adresse IP du serveur
+            if (ConnectionChecker.checkConnection(serverAddress, 1234)) {
+                Socket socket = new Socket(serverAddress, 1234);
+                Client client = new Client();
+                client.run();
+            } else {
+                System.out.println("Le serveur est indisponible.");
+            }
+        }
     }
 }
