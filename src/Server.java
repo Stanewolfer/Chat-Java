@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ public class Server implements Runnable {
     private Server(ServerSocket serverSocket) {
         connections = new ArrayList<>();
         done = false;
+        server = serverSocket;
     }
 
     @Override
@@ -71,31 +71,33 @@ public class Server implements Runnable {
             try {
                 out = new PrintWriter(client.getOutputStream(),true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                out.println("Entrer un pseudo : ");
+                out.println("Enter a nickname: ");
                 nickname = in.readLine();
-                System.out.println(nickname + " est connecté !");
-                broadcast(nickname + " a rejoint le serveur !");
+                System.out.println(nickname + " connected!");
+                broadcast(nickname + " has joined the server!");
                 String message;
                 while ((message = in.readLine()) != null) {
                     if (message.startsWith("/nick ")) {
                         String[] messageSplit = message.split(" ", 2);
                         if (messageSplit.length == 2) {
-                            broadcast(nickname + " se renommer en : " + messageSplit[1]);
-                            System.out.println(nickname + " se renommer en  : " + messageSplit[1]);
+                            broadcast(nickname + " is now known as: " + messageSplit[1]);
+                            System.out.println(nickname + " is now known as: " + messageSplit[1]);
                             nickname = messageSplit[1];
-                            out.println("La modification du pseudo en " + nickname + "est un succès !");
+                            out.println("Successfully changed nickname to " + nickname + "!");
                         }else {
-                            out.println("No nickname provided !");
+                            out.println("No nickname provided!");
                         }
                     }else if (message.startsWith("/quit ")) {
-                        broadcast(nickname + " à quitter la discussion !");
+                        broadcast(nickname + " has left the chat!");
                         shutdown();
+                    }else if (message.equals("/help")) {
+                        out.println("Available commands: /nick <new_nickname>, /quit, /help");
                     }else {
                         broadcast(nickname + ": " + message);
                     }
                 }
             } catch (IOException e) {
-                shutdown(); 
+                shutdown();
             }
         }
         public void sendMessage(String message) {
@@ -105,7 +107,7 @@ public class Server implements Runnable {
             try {
                 in.close();
                 out.close();
-                if (!client.isClosed()) {
+                if (!client.isClosed()){
                     client.close();
                 }
             } catch (IOException e) {
@@ -113,34 +115,15 @@ public class Server implements Runnable {
             }
         }
     }
-    
-    private static InetAddress getWifiAddress() throws IOException {
-        InetAddress wifiAddress = null;
-        InetAddress localhost = InetAddress.getLocalHost();
-        InetAddress[] allAddresses = InetAddress.getAllByName(localhost.getHostName());
-        for (InetAddress address : allAddresses) {
-            if (address.isSiteLocalAddress() && !address.equals(localhost)) {
-                wifiAddress = address;
-                break;
-            }
-        }
-        return wifiAddress;
-    }
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = null;
         try {
-            InetAddress wifiAddress = getWifiAddress();
-            if (wifiAddress != null) {
-                serverSocket = new ServerSocket(1234, 50, wifiAddress);
-                System.out.println("Server started on IP address: " + wifiAddress.getHostAddress());
-                Server server = new Server(serverSocket);
-                server.run();
-            } else {
-                System.out.println("No WiFi network found.");
-            }
+            ServerSocket serverSocket = new ServerSocket(9999, 1);
+            System.out.println("Server started on port 9999...");
+            Server server = new Server(serverSocket);
+            server.run();
         } catch (IOException e) {
-            System.err.println("An error occurred while starting the server: " + e.getMessage());
+            System.err.println("Could not start server: " + e.getMessage());
         }
     }
 }
