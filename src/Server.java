@@ -91,7 +91,7 @@ public class Server implements Runnable {
                         broadcast(nickname + " has left the chat!");
                         shutdown();
                     }else if (message.equals("/help")) {
-                        out.println("Available commands: /nick <new_nickname>, /quit, /help");
+                        out.println("Available commands: /rename <new_nickname>, /quit, /help");
                     }else {
                         broadcast(nickname + ": " + message);
                     }
