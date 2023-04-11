@@ -16,11 +16,11 @@ public class Client implements Runnable {
     public void run() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            InetAddress serverAddress;
-            System.out.print("Enter server IP address: ");
-            String ipAddress = reader.readLine().trim();
-            serverAddress = InetAddress.getByName(ipAddress);
-            client = new Socket("192.168.43.129", 9999);
+            // InetAddress serverAddress;
+            // System.out.print("Enter server IP address: ");
+            // String ipAddress = reader.readLine().trim();
+            // serverAddress = InetAddress.getByName(ipAddress);
+            client = new Socket("4.tcp.eu.ngrok.io", 10419);
             out = new PrintWriter(client.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 

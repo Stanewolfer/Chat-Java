@@ -119,7 +119,7 @@ public class Server implements Runnable {
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server...");
         ServerSocket serverSocket = new ServerSocket(9999);
-        String ipAddress = "192.168.43.129";
+        String ipAddress = "http://localhost";
         System.out.println("Server running on IP address " + ipAddress + ", port 9999");
         Server server = new Server(serverSocket);
         new Thread(server).start();
