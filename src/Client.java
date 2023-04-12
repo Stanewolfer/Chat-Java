@@ -20,7 +20,7 @@ public class Client implements Runnable {
             // System.out.print("Enter server IP address: ");
             // String ipAddress = reader.readLine().trim();
             // serverAddress = InetAddress.getByName(ipAddress);
-            client = new Socket("4.tcp.eu.ngrok.io", 10419);
+            client = new Socket("6.tcp.eu.ngrok.io", 13651);
             out = new PrintWriter(client.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
